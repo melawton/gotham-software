@@ -29,6 +29,7 @@ function Gotham3D_sim_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for Gotham3D_sim
 handles.output = hObject;
+%Test
 
 % Update handles structure
 guidata(hObject, handles);
