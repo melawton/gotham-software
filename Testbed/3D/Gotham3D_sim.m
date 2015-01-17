@@ -1,11 +1,11 @@
-function varargout = Gotham2D_sim(varargin)
-% I am here
+function varargout = Gotham3D_sim(varargin)
+
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',          mfilename, ...
                    'gui_Singleton',     gui_Singleton, ...
-                   'gui_OpeningFcn',    @Gotham2D_sim_OpeningFcn, ...
-                   'gui_OutputFcn',     @Gotham2D_sim_OutputFcn, ...
+                   'gui_OpeningFcn',    @Gotham3D_sim_OpeningFcn, ...
+                   'gui_OutputFcn',     @Gotham3D_sim_OutputFcn, ...
                    'gui_LayoutFcn',     [], ...
                    'gui_Callback',      []);
 if nargin && ischar(varargin{1})
@@ -19,22 +19,22 @@ else
 end
 % End initialization code - DO NOT EDIT
 
-% --- Executes just before Gotham2D_sim is made visible.
-function Gotham2D_sim_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before Gotham3D_sim is made visible.
+function Gotham3D_sim_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to Gotham2D_sim (see VARARGIN)
+% varargin   command line arguments to Gotham3D_sim (see VARARGIN)
 
-% Choose default command line output for Gotham2D_sim
+% Choose default command line output for Gotham3D_sim
 handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
 
 % --- Outputs from this function are returned to the command line.
-function varargout = Gotham2D_sim_OutputFcn(hObject, eventdata, handles)
+function varargout = Gotham3D_sim_OutputFcn(hObject, eventdata, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
