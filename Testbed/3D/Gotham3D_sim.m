@@ -29,8 +29,6 @@ function Gotham3D_sim_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for Gotham3D_sim
 handles.output = hObject;
-%Test
-
 % Update handles structure
 guidata(hObject, handles);
 
@@ -47,29 +45,64 @@ varargout{1} = handles.output;
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% --- Executes on button press in reset_button.
+
+function reset_button_Callback(hObject, eventdata, handles)
+% hObject    handle to reset_button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% x coordinate and y coordinate are global letting them be called and
+% changed from multiple functions
+global xc_coord;
+global yc_coord;
+global zc_coord;
+%Erases the list for the x and y coordinates
+xc_coord=[];
+yc_coord=[];
+zc_coord=[];
+
+% --- Executes on button press in enter_button.
+function enter_button_Callback(hObject, eventdata, handles)
+% hObject    handle to enter_button (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+%declares the x and y coordiantes as global
+global xc_coord;
+global yc_coord;
+global zc_coord;
+global current;
+
+xc = str2double(get(handles.xc_input,'String')); %x coordinate of coil
+yc = str2double(get(handles.yc_input,'String')); %y coordinate of coil
+zc = str2double(get(handles.zc_input,'String')); %z coordinate of coil
+curr = str2double(get(handles.curr_input,'String')); %current going through coil
+%Adds the x and y to the end of the global variable
+xc_coord(end+1)=xc;
+yc_coord(end+1)=yc;
+zc_coord(end+1)=zc;
+current(end+1)=curr;
+
+
 
 function plot_button_Callback(hObject, eventdata, handles, varargin)
 % hObject    handle to plot_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Get user input from GUI
+%x and y are global variables
+global xc_coord;
+global yc_coord;
+global zc_coord;
+global current;
+
 x = str2double(get(handles.x_input,'String')); %x coordinate
 y = str2double(get(handles.y_input,'String')); %y coordinate
-n = str2double(get(handles.n_input,'String')); %num of coils
+z = str2double(get(handles.z_input,'String')); %z coordinate
 
-xc_1 = str2double(get(handles.xc_1_input,'String')); %x coordinate of first coil
-yc_1 = str2double(get(handles.yc_1_input,'String')); %y coordinate of first coil
-
-xc_2 = str2double(get(handles.xc_2_input,'String')); %x coordinate of second coil
-yc_2 = str2double(get(handles.yc_2_input,'String')); %y coordinate of second coil
-
-xc_3 = str2double(get(handles.xc_3_input,'String')); %x coordinate of third coil
-yc_3 = str2double(get(handles.yc_3_input,'String')); %y coordinate of third coil
-
-xc_coord = [xc_1, xc_2, xc_3];
-yc_coord = [yc_1, yc_2, yc_3];
-
+n=length(xc_coord);%n number of coils
+%% 
 %Constants
 mu = 4.*pi.*10^(-7); %vacuum permiability
 mur = 1.25663753.*10.^(-6);
@@ -120,6 +153,52 @@ end
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+
+function result_Callback(hObject, eventdata, handles)
+% hObject    handle to result (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of result as text
+%        str2double(get(hObject,'String')) returns contents of result as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function result_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to result (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+function debug_Callback(hObject, eventdata, handles)
+% hObject    handle to debug (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of debug as text
+%        str2double(get(hObject,'String')) returns contents of debug as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function debug_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to debug (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
 function x_input_Callback(hObject, eventdata, handles)
 % hObject    handle to x_input (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -166,18 +245,18 @@ end
 
 
 
-function n_input_Callback(hObject, eventdata, handles)
-% hObject    handle to n_input (see GCBO)
+function z_input_Callback(hObject, eventdata, handles)
+% hObject    handle to z_input (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of n_input as text
-%        str2double(get(hObject,'String')) returns contents of n_input as a double
+% Hints: get(hObject,'String') returns contents of z_input as text
+%        str2double(get(hObject,'String')) returns contents of z_input as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function n_input_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to n_input (see GCBO)
+function z_input_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to z_input (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -189,18 +268,20 @@ end
 
 
 
-function xc_1_input_Callback(hObject, eventdata, handles)
-% hObject    handle to xc_1_input (see GCBO)
+
+
+function xc_input_Callback(hObject, eventdata, handles)
+% hObject    handle to xc_input (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of xc_1_input as text
-%        str2double(get(hObject,'String')) returns contents of xc_1_input as a double
+% Hints: get(hObject,'String') returns contents of xc_input as text
+%        str2double(get(hObject,'String')) returns contents of xc_input as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function xc_1_input_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to xc_1_input (see GCBO)
+function xc_input_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to xc_input (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -212,18 +293,39 @@ end
 
 
 
-function yc_1_input_Callback(hObject, eventdata, handles)
-% hObject    handle to yc_1_input (see GCBO)
+function zc_input_Callback(hObject, eventdata, handles)
+% hObject    handle to zc_input (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of yc_1_input as text
-%        str2double(get(hObject,'String')) returns contents of yc_1_input as a double
+% Hints: get(hObject,'String') returns contents of zc_input as text
+%        str2double(get(hObject,'String')) returns contents of zc_input as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function yc_1_input_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to yc_1_input (see GCBO)
+function zc_input_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to zc_input (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function yc_input_Callback(hObject, eventdata, handles)
+% hObject    handle to yc_input (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of yc_input as text
+%        str2double(get(hObject,'String')) returns contents of yc_input as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function yc_input_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to yc_input (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -235,18 +337,18 @@ end
 
 
 
-function result_Callback(hObject, eventdata, handles)
-% hObject    handle to result (see GCBO)
+function curr_input_Callback(hObject, eventdata, handles)
+% hObject    handle to curr_input (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of result as text
-%        str2double(get(hObject,'String')) returns contents of result as a double
+% Hints: get(hObject,'String') returns contents of curr_input as text
+%        str2double(get(hObject,'String')) returns contents of curr_input as a double
 
 
 % --- Executes during object creation, after setting all properties.
-function result_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to result (see GCBO)
+function curr_input_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to curr_input (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -256,117 +358,3 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
-function xc_2_input_Callback(hObject, eventdata, handles)
-% hObject    handle to xc_2_input (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of xc_2_input as text
-%        str2double(get(hObject,'String')) returns contents of xc_2_input as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function xc_2_input_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to xc_2_input (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function yc_2_input_Callback(hObject, eventdata, handles)
-% hObject    handle to yc_2_input (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of yc_2_input as text
-%        str2double(get(hObject,'String')) returns contents of yc_2_input as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function yc_2_input_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to yc_2_input (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function xc_3_input_Callback(hObject, eventdata, handles)
-% hObject    handle to xc_3_input (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of xc_3_input as text
-%        str2double(get(hObject,'String')) returns contents of xc_3_input as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function xc_3_input_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to xc_3_input (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function yc_3_input_Callback(hObject, eventdata, handles)
-% hObject    handle to yc_3_input (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of yc_3_input as text
-%        str2double(get(hObject,'String')) returns contents of yc_3_input as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function yc_3_input_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to yc_3_input (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function debug_Callback(hObject, eventdata, handles)
-% hObject    handle to debug (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of debug as text
-%        str2double(get(hObject,'String')) returns contents of debug as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function debug_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to debug (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
