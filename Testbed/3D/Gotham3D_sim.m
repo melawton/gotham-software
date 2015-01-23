@@ -100,6 +100,7 @@ global current;
 x = str2double(get(handles.x_input,'String')); %x coordinate
 y = str2double(get(handles.y_input,'String')); %y coordinate
 z = str2double(get(handles.z_input,'String')); %z coordinate
+y(end)=[];
 
 n=length(xc_coord);%n number of coils
 %% 
