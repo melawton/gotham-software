@@ -73,7 +73,6 @@ global xc_coord;
 global yc_coord;
 global zc_coord;
 global current;
-global coord;
 
 xc = str2double(get(handles.xc_input,'String')); %x coordinate of coil
 yc = str2double(get(handles.yc_input,'String')); %y coordinate of coil
@@ -84,8 +83,6 @@ xc_coord(end+1)=xc;
 yc_coord(end+1)=yc;
 zc_coord(end+1)=zc;
 current(end+1)=curr;
-coord = [xc_coord(:) yc_coord(:) zc_coord(:) curr(:)];
-
 
 
 
