@@ -100,10 +100,12 @@ global current;
 x = str2double(get(handles.x_input,'String')); %x coordinate
 y = str2double(get(handles.y_input,'String')); %y coordinate
 z = str2double(get(handles.z_input,'String')); %z coordinate
+x(end)=[];
 y(end)=[];
+z(end)=[];
 
 n=length(xc_coord);%n number of coils
-%% 
+
 %Constants
 mu = 4.*pi.*10^(-7); %vacuum permiability
 mur = 1.25663753.*10.^(-6);
