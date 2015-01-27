@@ -105,7 +105,91 @@ y(end)=[];
 z(end)=[];
 
 n=length(xc_coord);%n number of coils
+numcurrcoils = 5;
+magfieldmatrix = zeros(100,100,100);
+for coil = 1 : numcurrcoils
+mu0 = 4.*pi.*10^(-7);
+coilradius = 5; %radius of coil
+xcord = 3; % x-coordinate
+ycord = 3; % y-coordinate
+zcord =3;   % z-coordinate
+I = 1; %current supply
+heightcoil = 2; % height of coil
+numcoils = 5; % number of coils per coil
+heightpercoil = heightcoil/numcoils; %height of each coil
+heightinc = heightpercoil/360; %height increase for each theta
 
+    for x = 1:100
+        x1 = (x - xcord)./1000; %from point to center in x direction
+        for y = 1:100
+            y1 = (y - ycord)./1000;
+            for z = 1:100
+                z1 = (z - zcord)./1000;
+                for dtheta = 0:360*numcoils
+                    if theta == 0
+                        vector = [(x1- coilradius) y1 z1]; %vector
+                        normvector = vector./norm(vector); 
+                        R = sqrt(x1.^2 + y1.^2 + z1.^2)- coilradius;
+                        
+                        magfieldmatrix(x,y,z) = + B;
+                    elseif (theta > 0) && (90 >= theta)
+                        deltay = coilradius.*sind(theta);
+                        deltax = coilradius.*cosd(theta);
+                        deltaz = heightinc.*theta;
+                        y2 = y1 + deltay;
+                        x2 = x1 + deltax;
+                        z2 = z1 + deltaz;
+                        R = sqrt(x2.^2 + y2.^2 + z2.^2);
+                        vectodx = [deltax deltay deltaz];
+                        normvectordx = vectordx./norm(vectordx);
+                        vector = [x2 y2 z2];
+                        normvector = vector./norm(vector);
+                         magfieldmatrix(x,y,z) = + B;
+                    elseif (theta > 90) && (180 >= theta)
+                        deltay = coilradius.*(1-cosd(theta));
+                        deltax = cooilradius.*(1+sind(theta));
+                        deltaz = heightinc.*theta;
+                        x2 = x1 + deltax;
+                        y2 = y2 + deltay;
+                        z2 = z1 + deltaz;
+                        R = sqrt(x2.^2 + y2.^2 + z2.^2);
+                        vectordx = [deltax deltay deltaz];
+                        vector = [x2 y2 z2];
+                        normvector = vector./norm(vector);
+                    elseif (theta > 180) && (270 >= theta)
+                        deltay = coilradius.*(-cosd(theta));
+                        deltax = cooilradius.*(2-sind(theta));\
+                        deltaz = heightinc.*theta;
+                        x2 = x1 + deltax;
+                        y2 = y2 + deltay;
+                        z2 = z1 + deltaz;
+                        R = sqrt(x2.^2 + y2.^2 + z2.^2);
+                        vectodx = [deltax deltay deltaz];
+                        normvectordx = vectordx./norm(vectordx);
+                        vector = [x2 y2 z2];
+                        normvector = vector./norm(vector);
+                    else
+                        deltay = coilradius.*(1-cosd(theta));
+                        deltax = cooilradius.*(1+sind(theta));
+                        deltaz = heightinc.*theta;
+                        x2 = x1 + deltax;
+                        y2 = y2 + deltay;
+                        z2 = z1 + deltaz;
+                        R = sqrt(x2.^2 + y2.^2 + z2.^2);
+                        vector = [x2 y2 z2];
+                        vectodx = [deltax deltay deltaz];
+                        normvectordx = vectordx./norm(vectordx);
+                        normvector = vector./norm(vector);
+                   
+                    end
+                end
+            end
+        end
+    end
+end
+
+
+%{
 %Constants
 mu = 4.*pi.*10^(-7); %vacuum permiability
 mur = 1.25663753.*10.^(-6);
@@ -142,7 +226,7 @@ for k = 1:n
             end 
      end
 end
-
+%}
  result = plane(x,y); %find the B-field at the designated point
  
  %Outputs
