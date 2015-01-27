@@ -158,7 +158,7 @@ heightinc = heightpercoil/360; %height increase for each theta
                         normvector = vector./norm(vector);
                     elseif (theta > 180) && (270 >= theta)
                         deltay = coilradius.*(-cosd(theta));
-                        deltax = cooilradius.*(2-sind(theta));\
+                        deltax = cooilradius.*(2-sind(theta));
                         deltaz = heightinc.*theta;
                         x2 = x1 + deltax;
                         y2 = y2 + deltay;
@@ -444,4 +444,3 @@ function curr_input_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
