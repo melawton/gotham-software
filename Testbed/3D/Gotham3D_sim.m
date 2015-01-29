@@ -1,3 +1,7 @@
+%These two lines surpress varargin errors when uncommented out
+%function Start_DeleteFcn(varargin)
+%function Stop_CraeteFcn(varargin)
+
 function varargout = Gotham3D_sim(varargin)
 
 % Begin initialization code - DO NOT EDIT
@@ -86,6 +90,7 @@ xc = str2double(get(handles.xc_input,'String')); %x coordinate of coil
 yc = str2double(get(handles.yc_input,'String')); %y coordinate of coil
 zc = str2double(get(handles.zc_input,'String')); %z coordinate of coil
 curr = str2double(get(handles.curr_input,'String')); %current going through coil
+
 %Adds the x and y to the end of the global variable
 xc_coord(end+1)=xc;
 yc_coord(end+1)=yc;
@@ -108,8 +113,6 @@ assignin('base','result', result);
 % result = [xc_str;yc_str; zc_str; curr_str];
 % t = uitable('Parent', f, 'Data',result);
 
-
-
 function plot_button_Callback(hObject, eventdata, handles, varargin)
 % hObject    handle to plot_button (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -131,17 +134,19 @@ z(end)=[];
 n=length(xc_coord);%n number of coils
 numcurrcoils = 5;
 magfieldmatrix = zeros(100,100,100);
+
 for coil = 1 : numcurrcoils
-mu0 = 4.*pi.*10^(-7);
-coilradius = 5; %radius of coil
-xcord = 3; % x-coordinate
-ycord = 3; % y-coordinate
-zcord =3;   % z-coordinate
-I = 1; %current supply
-heightcoil = 2; % height of coil
-numcoils = 5; % number of coils per coil
-heightpercoil = heightcoil/numcoils; %height of each coil
-heightinc = heightpercoil/360; %height increase for each theta
+    
+    mu0 = 4.*pi.*10^(-7);
+    coilradius = 5; %radius of coil
+    xcord = 3; % x-coordinate
+    ycord = 3; % y-coordinate
+    zcord =3;   % z-coordinate
+    I = 1; %current supply
+    heightcoil = 2; % height of coil
+    numcoils = 5; % number of coils per coil
+    heightpercoil = heightcoil/numcoils; %height of each coil
+    heightinc = heightpercoil/360; %height increase for each theta
 
     for x = 1:100
         x1 = (x - xcord)./1000; %from point to center in x direction
@@ -255,25 +260,17 @@ end
  
  %Outputs
  
- set(handles.debug, 'String', num2str(xc_coord(1))); %test
+ set(handles.debug, 'String', num2str(x)); %test
  set(handles.result, 'String', num2str(result)); %outputs result
 
  hm = HeatMap(plane, 'DisplayRange', 0.00001);
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Don't change anything below this
 
 function result_Callback(hObject, eventdata, handles)
-% hObject    handle to result (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of result as text
-%        str2double(get(hObject,'String')) returns contents of result as a double
-
 
 % --- Executes during object creation, after setting all properties.
 function result_CreateFcn(hObject, eventdata, handles)
@@ -468,7 +465,7 @@ function curr_input_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-<<<<<<< HEAD
+%<<<<<<< HEAD
 
 
 
@@ -528,5 +525,5 @@ function uitable3_CellEditCallback(hObject, eventdata, handles)
 %	NewData: EditData or its converted form set on the Data property. Empty if Data was not changed
 %	Error: error string when failed to convert EditData to appropriate value for Data
 % handles    structure with handles and user data (see GUIDATA)
-=======
->>>>>>> origin/master
+%=======
+%>>>>>>> origin/master
