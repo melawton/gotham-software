@@ -260,8 +260,11 @@ end
  
  %Outputs
  
- set(handles.debug, 'String', num2str(x)); %test
- set(handles.result, 'String', num2str(result)); %outputs result
+ %this line is for debugging
+ set(handles.debug, 'String', num2str(x)); 
+ 
+ %this line outputs the result to the GUI
+ set(handles.result, 'String', num2str(result)); 
 
  hm = HeatMap(plane, 'DisplayRange', 0.00001);
 
