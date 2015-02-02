@@ -91,21 +91,20 @@ xc = str2double(get(handles.xc_input,'String')); %x coordinate of coil
 yc = str2double(get(handles.yc_input,'String')); %y coordinate of coil
 zc = str2double(get(handles.zc_input,'String')); %z coordinate of coil
 curr = str2double(get(handles.curr_input,'String')); %current going through coil
-num_coils = str2double(get(handles.numCoils,'String')); %number of coils
+numCoils = str2double(get(handles.curr_input,'String')); %number of coils
 
 %Adds the x and y to the end of the global variable
- result = '';
-% for k = 1:numCoils
+for k = 1:numbercoils
     xc_coord(end+1)=xc;
     yc_coord(end+1)=yc;
     zc_coord(end+1)=zc;
-    current(end+1)=curr;   
+    current(end+1)=curr;
 
     xc_str = num2str(xc);
     yc_str = num2str(yc);
     zc_str = num2str(zc);
     curr_str = num2str(curr);
-   
+    result = '';
     result = strcat(result, xc_str, yc_str, zc_str, curr_str);
 %to verify the values of current coils
     assignin('base','XCoord',xc_str);
@@ -115,7 +114,6 @@ num_coils = str2double(get(handles.numCoils,'String')); %number of coils
     assignin('base','result', result);
     displayResult = evalin('base', result);
     set(handles.listbox3, 'String', displayResult);
-% end
 
 % f = figure;
 % result = [xc_str;yc_str; zc_str; curr_str];
@@ -575,17 +573,17 @@ function listbox3_KeyPressFcn(hObject, eventdata, handles)
 
 
 function numCoils_Callback(hObject, eventdata, handles)
-% hObject    handle to numCoils (see GCBO)
+% hObject    handle to edit30 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'String') returns contents of numCoils as text
-%        str2double(get(hObject,'String')) returns contents of numCoils as a double
+% Hints: get(hObject,'String') returns contents of edit30 as text
+%        str2double(get(hObject,'String')) returns contents of edit30 as a double
 
 
 % --- Executes during object creation, after setting all properties.
 function numCoils_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to numCoils (see GCBO)
+% hObject    handle to edit30 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -594,6 +592,3 @@ function numCoils_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-
-
-
