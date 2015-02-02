@@ -9,3 +9,9 @@ box will display the value of any variable you want it to. To access it, look at
 the .m file, under the comment "%this line is for debugging". Change the "x" variable in "num2str(x)" to output 
 the value of x to the GUI. For example, if I want to examine the value that is currently in being stored in 
 the first position of the xc_coord list, the entire line would read "set(handles.debug, 'String', num2str(xc_coord(1)));".
+
+Feb 2nd,2015
+Michigan just announced Snow day!!!!!!
+a listbox and a number of current coils textbox are added.
+table is replaced with the listbox
+evalin() function is used to display the variables from workspace on the listbox
