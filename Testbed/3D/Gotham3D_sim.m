@@ -87,11 +87,19 @@ global t;
 global result;
 global displayResult;
 
-xc = str2double(get(handles.xc_input,'String')); %x coordinate of coil
-yc = str2double(get(handles.yc_input,'String')); %y coordinate of coil
-zc = str2double(get(handles.zc_input,'String')); %z coordinate of coil
-curr = str2double(get(handles.curr_input,'String')); %current going through coil
-num_coils = str2double(get(handles.numCoils,'String')); %number of coils
+%Find Object Handles
+xc_handle = findobj('Tag','xc_input');
+yc_handle = findobj('Tag','yc_input');
+zc_handle = findobj('Tag','zc_input');
+curr_handle = findobj('Tag','curr_input');
+num_coils_handle = findobj('Tag','numCoils');
+listbox3_handle = findobj('Tag','listbox3');
+
+xc = str2double(get(xc_handle,'String')); %x coordinate of coil
+yc = str2double(get(yc_handle,'String')); %y coordinate of coil
+zc = str2double(get(zc_handle,'String')); %z coordinate of coil
+curr = str2double(get(curr_handle,'String')); %current going through coil
+num_coils = str2double(get(num_coils_handle,'String')); %number of coils
 
 %Adds the x and y to the end of the global variable
  result = '';
@@ -114,7 +122,7 @@ num_coils = str2double(get(handles.numCoils,'String')); %number of coils
     assignin('base','Current',curr_str);
     assignin('base','result', result);
     displayResult = evalin('base', result);
-    set(handles.listbox3, 'String', displayResult);
+    set(listbox3_handle, 'String', displayResult);
 % end
 
 % f = figure;
@@ -132,9 +140,14 @@ global yc_coord;
 global zc_coord;
 global current;
 
-x = str2double(get(handles.x_input,'String')); %x coordinate
-y = str2double(get(handles.y_input,'String')); %y coordinate
-z = str2double(get(handles.z_input,'String')); %z coordinate
+%Find Object Handles
+x_handle = findobj('Tag','x_input');
+y_handle = findobj('Tag','y_input');
+z_handle = findobj('Tag','z_input');
+
+x = str2double(get(x_handle,'String')); %x coordinate
+y = str2double(get(y_handle,'String')); %y coordinate
+z = str2double(get(z_handle,'String')); %z coordinate
 x(end)=[];
 y(end)=[];
 z(end)=[];
@@ -162,13 +175,13 @@ for coil = 1 : numcurrcoils
             y1 = (y - ycord)./1000;
             for z = 1:100
                 z1 = (z - zcord)./1000;
-                for dtheta = 0:360*numcoils
+                for theta = 0:360*numcoils
                     if theta == 0
                         vector = [(x1- coilradius) y1 z1]; %vector
                         normvector = vector./norm(vector); 
                         R = sqrt(x1.^2 + y1.^2 + z1.^2)- coilradius;
                         
-                        magfieldmatrix(x,y,z) = + B;
+                        magfieldmatrix(x,y,z) = +B;
                     elseif (theta > 0) && (90 >= theta)
                         deltay = coilradius.*sind(theta);
                         deltax = coilradius.*cosd(theta);
