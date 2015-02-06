@@ -1,7 +1,3 @@
-%These two lines surpress varargin errors when uncommented out
-%function Start_DeleteFcn(varargin)
-%function Stop_CraeteFcn(varargin)
-
 function varargout = Gotham3D_sim(varargin)
 
 % Begin initialization code - DO NOT EDIT
@@ -152,18 +148,22 @@ x(end)=[];
 y(end)=[];
 z(end)=[];
 
+counter = 1; %counter for referencing elements from the global arrays
+
 n=length(xc_coord);%n number of coils
 numcurrcoils = 5;
 magfieldmatrix = zeros(100,100,100);
-
+ 
 for coil = 1 : numcurrcoils
     
     mu0 = 4.*pi.*10^(-7);
     coilradius = 5; %radius of coil
-    xcord = 3; % x-coordinate
-    ycord = 3; % y-coordinate
-    zcord =3;   % z-coordinate
-    I = 1; %current supply
+    
+    xcord = xc_coord(counter); % x-coordinate
+    ycord = yc_coord(counter); % y-coordinate
+    zcord = zc_coord(counter);   % z-coordinate
+    
+    I = current; %current supply
     heightcoil = 2; % height of coil
     numcoils = 5; % number of coils per coil
     heightpercoil = heightcoil/numcoils; %height of each coil
@@ -194,7 +194,7 @@ for coil = 1 : numcurrcoils
                         normvectordx = vectordx./norm(vectordx);
                         vector = [x2 y2 z2];
                         normvector = vector./norm(vector);
-                         magfieldmatrix(x,y,z) = + B;
+                         magfieldmatrix(x,y,z) = + B; 
                     elseif (theta > 90) && (180 >= theta)
                         deltay = coilradius.*(1-cosd(theta));
                         deltax = cooilradius.*(1+sind(theta));
@@ -236,8 +236,9 @@ for coil = 1 : numcurrcoils
             end
         end
     end
+    
+    counter = counter + 1;
 end
-
 
 %{
 %Constants
@@ -277,17 +278,22 @@ for k = 1:n
      end
 end
 %}
- result = plane(x,y); %find the B-field at the designated point
- 
- %Outputs
- 
- %this line is for debugging
- set(handles.debug, 'String', num2str(x)); 
- 
- %this line outputs the result to the GUI
- set(handles.result, 'String', num2str(result)); 
 
- hm = HeatMap(plane, 'DisplayRange', 0.00001);
+%result = plane(x,y); %find the B-field at the designated point
+%Outputs
+
+result_handle = findobj('Tag','result');
+debug_handle = findobj('Tag','debug');
+
+%this line is for debugging
+%the '7' in there is a placeholder, feel free to change it
+set(debug_handle, 'String', num2str(xc_coord(1))); 
+ 
+%this line outputs the result to the GUI
+%change the '9' to 'result' when it's ready
+set(result_handle, 'String', num2str(9)); 
+
+ %hm = HeatMap(plane, 'DisplayRange', 0.00001);
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -400,8 +406,6 @@ end
 
 
 
-
-
 function xc_input_Callback(hObject, eventdata, handles)
 % hObject    handle to xc_input (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -409,6 +413,7 @@ function xc_input_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of xc_input as text
 %        str2double(get(hObject,'String')) returns contents of xc_input as a double
+
 
 
 % --- Executes during object creation, after setting all properties.
