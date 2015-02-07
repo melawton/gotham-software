@@ -178,14 +178,11 @@ for coil = 1 : numcurrcoils
                 for theta = 0:360*numcoils
                     if theta == 0
                         vector = [(x1- coilradius) y1 z1]; %vector
-                        deltaz = heightinc.*theta;
-                        z2 = z1 + deltaz;
-                        vectodx = [0 0 deltaz];
-                        normvectordx = vectordx./norm(vectordx);
                         normvector = vector./norm(vector); 
                         R = sqrt(x1.^2 + y1.^2 + z1.^2)- coilradius;
                         dlxdr = cross(normvectordx,normvector);
-                        B = (mu0.*(current.*dlxdr))./R.^3;                      
+                        B = (mu0.*(current.*dlxdr))./R.^3;                       
+                       
                         magfieldmatrix(x,y,z) = +B;
                     elseif (theta > 0) && (90 >= theta)
                         deltay = coilradius.*sind(theta);
@@ -222,10 +219,7 @@ for coil = 1 : numcurrcoils
                         vectodx = [deltax deltay deltaz];
                         normvectordx = vectordx./norm(vectordx);
                         vector = [x2 y2 z2];
-                        normvector = vector./norm(vector
-                        dlxdr = cross(normvectordx,normvector);
-                        B = (mu0.*(current.*dlxdr))./R.^3;                       
-                        magfieldmatrix(x,y,z) = + B;
+                        normvector = vector./norm(vector);
                     else
                         deltay = coilradius.*(1-cosd(theta));
                         deltax = cooilradius.*(1+sind(theta));
@@ -238,9 +232,6 @@ for coil = 1 : numcurrcoils
                         vectodx = [deltax deltay deltaz];
                         normvectordx = vectordx./norm(vectordx);
                         normvector = vector./norm(vector);
-                        dlxdr = cross(normvectordx,normvector);
-                        B = (mu0.*(current.*dlxdr))./R.^3;                       
-                        magfieldmatrix(x,y,z) = + B;
                    
                     end
                 end
