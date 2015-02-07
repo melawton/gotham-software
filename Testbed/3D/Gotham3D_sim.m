@@ -31,6 +31,9 @@ function Gotham3D_sim_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
+% Reset Listbox
+global line_str;
+line_str = [];
 
 % --- Outputs from this function are returned to the command line.
 function varargout = Gotham3D_sim_OutputFcn(hObject, eventdata, handles)
@@ -62,6 +65,11 @@ global zc_coord;
 xc_coord=[];
 yc_coord=[];
 zc_coord=[];
+% Reset Listbox
+global line_str;
+line_str = [];
+listbox3_handle = findobj('Tag','listbox3');
+set(listbox3_handle, 'String', line_str);
 
 % --- Executes on button press in enter_button.
 function enter_button_Callback(hObject, eventdata, handles)
@@ -82,6 +90,7 @@ global curr_str;
 global t;
 global result;
 global displayResult;
+global line_str;
 
 %Find Object Handles
 xc_handle = findobj('Tag','xc_input');
@@ -97,29 +106,19 @@ zc = str2double(get(zc_handle,'String')); %z coordinate of coil
 curr = str2double(get(curr_handle,'String')); %current going through coil
 num_coils = str2double(get(num_coils_handle,'String')); %number of coils
 
-%Adds the x and y to the end of the global variable
- result = '';
-% for k = 1:numCoils
-    xc_coord(end+1)=xc;
-    yc_coord(end+1)=yc;
-    zc_coord(end+1)=zc;
-    current(end+1)=curr;   
+xc_coord(end+1)=xc;
+yc_coord(end+1)=yc;
+zc_coord(end+1)=zc;
+current(end+1)=curr;
 
-    xc_str = num2str(xc);
-    yc_str = num2str(yc);
-    zc_str = num2str(zc);
-    curr_str = num2str(curr);
-   
-    result = strcat(result, xc_str, yc_str, zc_str, curr_str);
-%to verify the values of current coils
-    assignin('base','XCoord',xc_str);
-    assignin('base','YCoord',yc_str);
-    assignin('base','ZCoord',zc_str);
-    assignin('base','Current',curr_str);
-    assignin('base','result', result);
-    displayResult = evalin('base', result);
-    set(listbox3_handle, 'String', displayResult);
-% end
+%Adds the x and y to the end of the global variable
+result = '';
+parenthL = '(';
+parenthR = ')';
+comma = ',';
+result = strcat(result,parenthL, num2str(xc),comma, num2str(yc),comma, num2str(zc),comma, num2str(curr),parenthR);
+line_str{end+1} = result;
+set(listbox3_handle, 'String', line_str);
 
 % f = figure;
 % result = [xc_str;yc_str; zc_str; curr_str];
@@ -219,10 +218,10 @@ for coil = 1 : numcurrcoils
                         y2 = y2 + deltay;
                         z2 = z1 + deltaz;
                         R = sqrt(x2.^2 + y2.^2 + z2.^2);
-                        vectodx = [deltax deltay deltaz];
+                        vectordx = [deltax deltay deltaz];
                         normvectordx = vectordx./norm(vectordx);
                         vector = [x2 y2 z2];
-                        normvector = vector./norm(vector
+                        normvector = vector./norm(vector);
                         dlxdr = cross(normvectordx,normvector);
                         B = (mu0.*(current.*dlxdr))./R.^3;                       
                         magfieldmatrix(x,y,z) = + B;
