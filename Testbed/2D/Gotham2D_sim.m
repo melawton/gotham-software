@@ -53,18 +53,28 @@ function plot_button_Callback(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get user input from GUI
-x = str2double(get(handles.x_input,'String')); %x coordinate
-y = str2double(get(handles.y_input,'String')); %y coordinate
-n = str2double(get(handles.n_input,'String')); %num of coils
+x_handle = findobj('Tag','x_input');
+y_handle = findobj('Tag','y_input');
+n_handle = findobj('Tag','n_input');
 
-xc_1 = str2double(get(handles.xc_1_input,'String')); %x coordinate of first coil
-yc_1 = str2double(get(handles.yc_1_input,'String')); %y coordinate of first coil
+x = str2double(get(x_handle,'String')); %x coordinate
+y = str2double(get(y_handle,'String')); %y coordinate
+n = str2double(get(n_handle,'String')); %number of coordinates
 
-xc_2 = str2double(get(handles.xc_2_input,'String')); %x coordinate of second coil
-yc_2 = str2double(get(handles.yc_2_input,'String')); %y coordinate of second coil
-
-xc_3 = str2double(get(handles.xc_3_input,'String')); %x coordinate of third coil
-yc_3 = str2double(get(handles.yc_3_input,'String')); %y coordinate of third coil
+xc_1_handle = findobj('Tag','xc_1_input');
+yc_1_handle = findobj('Tag','yc_1_input');
+xc_1 = str2double(get(xc_1_handle,'String')); %x coordinate of coil
+yc_1 = str2double(get(yc_1_handle,'String')); %y coordinate of coil
+ 
+xc_2_handle = findobj('Tag','xc_2_input');
+yc_2_handle = findobj('Tag','yc_2_input');
+xc_2 = str2double(get(xc_2_handle,'String')); %x coordinate of coil
+yc_2 = str2double(get(yc_2_handle,'String')); %y coordinate of coil
+ 
+xc_3_handle = findobj('Tag','xc_3_input');
+yc_3_handle = findobj('Tag','yc_3_input');
+xc_3 = str2double(get(xc_3_handle,'String')); %x coordinate of coil
+yc_3 = str2double(get(yc_3_handle,'String')); %y coordinate of coil
 
 xc_coord = [xc_1, xc_2, xc_3];
 yc_coord = [yc_1, yc_2, yc_3];
@@ -110,8 +120,16 @@ end
  
  %Outputs
  
- set(handles.debug, 'String', num2str(xc_coord(1))); %test
- set(handles.result, 'String', num2str(result)); %outputs result
+result_handle = findobj('Tag','result');
+debug_handle = findobj('Tag','debug');
+
+%this line is for debugging
+%the '7' in there is a placeholder, feel free to change it
+set(debug_handle, 'String', num2str(7)); 
+ 
+%this line outputs the result to the GUI
+%change the '9' to 'result' when it's ready
+set(result_handle, 'String', num2str(result)); 
 
  hm = HeatMap(plane, 'DisplayRange', 0.00001);
 
