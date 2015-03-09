@@ -167,12 +167,15 @@ for coil = 1 : numcurrcoils
     numcoils = 5; % number of coils per coil
     heightpercoil = heightcoil/numcoils; %height of each coil
     heightinc = heightpercoil/360; %height increase for each theta
+    theta = 0;
+    Bfield2 = 0;
+    
 
-    for x = 1:100
+    for x = 1:15
         x1 = (x - xcord)./1000; %from point to center in x direction
-        for y = 1:1000
+        for y = 1:15
             y1 = (y - ycord)./1000;
-            for z = 1:100
+            for z = 1:15
                 z1 = (z - zcord)./1000;
                for num = 1:numcoils
                     for theta = 0:360
@@ -186,7 +189,10 @@ for coil = 1 : numcurrcoils
                             R = sqrt((x1-coilradius).^2 + y1.^2 + z1.^2);
                             dlxdr = (cross(normvectordx,normvector));
                             B = norm(mu0.*(current.*dlxdr)./R.^3);                      
-                            magfieldmatrix(x,y,z) = + B
+                            Bfield2 = Bfield2 + B;
+                            magfieldmatrix(x,y,z) = Bfield2;
+                            theta = theta + 9
+                            
                        
                         while (theta > 0) && (90 >= theta)
                             deltay = coilradius.*sind(theta);
@@ -201,8 +207,11 @@ for coil = 1 : numcurrcoils
                             vector = [x2 y2 z2];
                             normvector = vector./norm(vector);
                             dlxdr = (cross(normvectordx,normvector));
-                            B = norm((mu0.*(current.*dlxdr))./R.^3);                       
-                            magfieldmatrix(x,y,z) = + B
+                            B = norm((mu0.*(current.*dlxdr))./R.^3);
+                            Bfield2 = Bfield2 + B;
+                            magfieldmatrix(x,y,z) = Bfield2;
+                         
+                            theta = theta + 9;
                        
                         while (theta > 90) && (180 >= theta)
                             deltay = coilradius.*(1-cosd(theta));
@@ -216,7 +225,9 @@ for coil = 1 : numcurrcoils
                             vector = [x2 y2 z2];
                             dlxdr = cross(normvectordx,normvector);
                             B = norm(mu0.*(current.*dlxdr)./R.^3);                       
-                            magfieldmatrix(x,y,z) = + B
+                            Bfield2 = Bfield2 + B;
+                            magfieldmatrix(x,y,z) = Bfield2;
+                            theta = theta + 9;
                       
                         while  (theta > 180) && (270 >= theta)
                             deltay = coilradius.*(-cosd(theta));
@@ -232,7 +243,9 @@ for coil = 1 : numcurrcoils
                             normvector = vector./norm(vector);
                             dlxdr = cross(normvectordx,normvector);
                             B = norm(mu0.*(current.*dlxdr)./R.^3);                       
-                            magfieldmatrix(x,y,z) = + B
+                            Bfield2 = Bfield2 + B;
+                            magfieldmatrix(x,y,z) = Bfield2;
+                            theta = theta + 9;
                       
                         while (theta > 270) && (360 >= theta)
                             deltay = coilradius.*(1-cosd(theta));
@@ -247,8 +260,10 @@ for coil = 1 : numcurrcoils
                             normvectordx = vectordx./norm(vectordx);
                             normvector = vector./norm(vector);
                             dlxdr = cross(normvectordx,normvector);
-                            B = mu0.*(current.*dlxdr)./R.^3;                       
-                            magfieldmatrix(x,y,z) = + norm(B)
+                            B = norm(mu0.*(current.*dlxdr)./R.^3);                       
+                            Bfield2 = Bfield2 + Bfield;
+                            magfieldmatrix(x,y,z) = Bfield2;
+                            theta = theta + 9;
                         end
                         end
                         end
