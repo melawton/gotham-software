@@ -191,7 +191,7 @@ for coil = 1 : numcurrcoils
                             B = norm(mu0.*(current.*dlxdr)./R.^3);                      
                             Bfield2 = Bfield2 + B;
                             magfieldmatrix(x,y,z) = Bfield2;
-                            theta = theta + 9;
+                            theta = theta + 9
                             
                        
                         while (theta > 0) && (90 >= theta)
@@ -276,8 +276,7 @@ for coil = 1 : numcurrcoils
     end
     counter = counter + 1;
 end 
-plane = magfieldmatrix(:, :, 50);
-hm = HeatMap(plane,'DisplayRange', .00001);
+   
 
 
 %{
