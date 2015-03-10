@@ -152,15 +152,17 @@ counter = 1; %counter for referencing elements from the global arrays
 n=length(xc_coord);%n number of coils
 numcurrcoils = 5;
 magfieldmatrix = zeros(100,100,100);
- 
+
 for coil = 1 : numcurrcoils
     
+    disp(['coil #' num2str(counter) ' is calculating...']);
+     
     mu0 = 4.*pi.*10^(-7./4.*pi);
     coilradius = 5; %radius of coil
-    
+   
     xcord = xc_coord(counter); % x-coordinate
     ycord = yc_coord(counter); % y-coordinate
-    zcord = zc_coord(counter);   % z-coordinate
+    zcord = zc_coord(counter); % z-coordinate
     
     I = current; %current supply
     heightcoil = 2; % height of coil
@@ -170,7 +172,6 @@ for coil = 1 : numcurrcoils
     theta = 0;
     Bfield2 = 0;
     
-
     for x = 1:15
         x1 = (x - xcord)./1000; %from point to center in x direction
         for y = 1:15
@@ -191,9 +192,8 @@ for coil = 1 : numcurrcoils
                             B = norm(mu0.*(current.*dlxdr)./R.^3);                      
                             Bfield2 = Bfield2 + B;
                             magfieldmatrix(x,y,z) = Bfield2;
-                            theta = theta + 9
+                            theta = theta + 9;
                             
-                       
                         while (theta > 0) && (90 >= theta)
                             deltay = coilradius.*sind(theta);
                             deltax = coilradius.*cosd(theta);
@@ -261,7 +261,7 @@ for coil = 1 : numcurrcoils
                             normvector = vector./norm(vector);
                             dlxdr = cross(normvectordx,normvector);
                             B = norm(mu0.*(current.*dlxdr)./R.^3);                       
-                            Bfield2 = Bfield2 + Bfield;
+                            Bfield2 = Bfield2 + B;
                             magfieldmatrix(x,y,z) = Bfield2;
                             theta = theta + 9;
                         end
