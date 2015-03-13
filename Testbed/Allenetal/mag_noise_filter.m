@@ -9,7 +9,10 @@ openfiles %this calls the openfiles function
     %Requires: mag_A.txt and mag_B.txt to be properly formatted text files
     %Modifies: nothing
     %Effects: opens mag_A.txt and mag_B.txt for reading
-        
+
+    mag_A = textread('mag_A.txt');
+    mag_B = textread('mag_B.txt');
+
     end
 
     %/////////////////////////////////////////
@@ -18,6 +21,8 @@ openfiles %this calls the openfiles function
     %Requires: mag_A.txt and mag_B.txt to be properly formatted text files
     %Modifies: D_list
     %Effects: subtracts mag_A from mag_B, stores results in D_list
+
+    D_list = mag_B - Mag_A;
 
     end
 
