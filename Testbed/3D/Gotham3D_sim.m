@@ -333,7 +333,7 @@ set(debug_handle, 'String', num2str(xc_coord(1)));
 %change the '9' to 'result' when it's ready
 set(result_handle, 'String', num2str(9)); 
 
- %hm = HeatMap(plane, 'DisplayRange', 0.00001);
+hm = HeatMap(plane, 'DisplayRange', 0.00001);
 
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 %~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
