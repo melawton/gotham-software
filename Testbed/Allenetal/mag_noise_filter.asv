@@ -1,9 +1,14 @@
 function [] = mag_noise_filter()
 %Here is the code for the electromagnetic noise filtering algorithm
 
+C_1_sample = 24 %placeholder values until correlation_calc function is done
+C_2_sample = 22
+
 openfiles; %this calls the openfiles function
 
 D_list_calc(mag_A, mag_B); %calculates D_list
+
+%interference(D_list, C_1, C_2)
 
     %/////////////////////////////////////////
     
@@ -35,9 +40,21 @@ D_list_calc(mag_A, mag_B); %calculates D_list
     %Modifies: C_1, C_2
     %Effects: C_1 is the correlation between D_list and mag_A
     %         C_2 is the correlation between D_list and mag_B
+    C_1_array = mag_A.txt.* D_list;
+    C_2_array = mag_B.txt.* D_list;
+    C_1 = prod(C_1_array);
+    C_2 = prod(C_2_array);
     
     end
 
-    function interference(D_list, C_1, C_2)
+    %/////////////////////////////////////////
+    
+    function interference(D_list, C_1_sample, C_2_sample)
+    %Requires: valid D_list, C_1, C_2 (correlation values) 
+    %Modifies: nothing
+    %Effects: calculates k constant, x (ambient), a (interference)
+    %         x and a are both arrays. 
+    
+    end
 end
 

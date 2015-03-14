@@ -40,6 +40,11 @@ D_list_calc(mag_A, mag_B); %calculates D_list
     %Modifies: C_1, C_2
     %Effects: C_1 is the correlation between D_list and mag_A
     %         C_2 is the correlation between D_list and mag_B
+    C_1 = mag_A.txt.* D_list;
+    C_2 = mag_B.txt.* D_list;
+    C_1
+    C_2
+    
     
     end
 
