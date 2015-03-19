@@ -254,7 +254,7 @@ for coil = 1 : 1
     %counter = counter + 1;
     end
 end
-magfieldmatrix(x,y,z) = numcoils*magfieldmatrix(x,y,z);
+magfieldmatrix(x,y,z) = numcoils*magfieldmatrix(x,y,z)
 plane = magfieldmatrix(:, :, 5);
 hm = HeatMap(plane,'DisplayRange', .00001);
 
