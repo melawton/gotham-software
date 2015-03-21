@@ -12,9 +12,6 @@ D_list_calc(mag_A, mag_B); %calculates D_list
 
     %/////////////////////////////////////////
 
-mag_A=[];
-mag_B=[];
-time_stamps=[];
 
     function openfiles
     %Requires: mag_A.txt and mag_B.txt to be properly formatted text files
