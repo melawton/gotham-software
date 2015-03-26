@@ -6,7 +6,7 @@ D_list_calc(mag_A, mag_B); %calculates D_list
 correlation_calc(mag_A, mag_B, D_list)
 
 
-%interference(D_list, C_1, C_2)
+interference(D_list, C_1, C_2)
 
     %/////////////////////////////////////////
     
@@ -51,6 +51,31 @@ correlation_calc(mag_A, mag_B, D_list)
     %Effects: calculates k constant, x (ambient), a (interference)
     %         x and a are both arrays. 
     
+    k = C_1/C_2;
+    a = D_list./(k-1);
+    x = mag_A - a;
+    
+    %Reads in the times from a text file
+    time_file = fopen('time_stamps_sample.txt');
+    timeline = fgetl(time_file);
+    n=1;
+    while(ischar(timeline))
+        times_cell{n} = timeline;
+        timeline = fgetl(time_file);
+        n=n+1;
+    end
+    fclose(time_file);
+    
+    times_char_array = char(times_cell);
+    
+    fileID = fopen('Results.txt','wt');
+    fprintf(fileID, '%s \t %s \t %s \n', 'times', 'a', 'x');
+    fprintf(fileID, '\n');
+ 
+    for i= 1:numel(a)
+        fprintf(fileID, '%s \t \t %f5 \t \t %f5 \n', times_char_array(i,:), a(i), x(i));
+        fprintf(fileID, '\n');
+    end
     end
 end
 

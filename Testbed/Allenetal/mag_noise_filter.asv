@@ -1,14 +1,12 @@
 function [] = mag_noise_filter()
 %Here is the code for the electromagnetic noise filtering algorithm
 
-C_1_sample = 24 %placeholder values until correlation_calc function is done
-C_2_sample = 22
-
 openfiles; %this calls the openfiles function
-
 D_list_calc(mag_A, mag_B); %calculates D_list
+correlation_calc(mag_A, mag_B, D_list)
 
-%interference(D_list, C_1, C_2)
+
+interference(D_list, C_1, C_2)
 
     %/////////////////////////////////////////
     
@@ -35,26 +33,46 @@ D_list_calc(mag_A, mag_B); %calculates D_list
 
     %/////////////////////////////////////////
     
-    function correlation_calc
+    function correlation_calc(mag_A, mag_B, D_list)
     %Requires: mag_A.txt, mag_B.txt and D_list must be same size
     %Modifies: C_1, C_2
     %Effects: C_1 is the correlation between D_list and mag_A
     %         C_2 is the correlation between D_list and mag_B
-    C_1_array = mag_A.txt.* D_list;
-    C_2_array = mag_B.txt.* D_list;
-    C_1 = prod(C_1_array);
-    C_2 = prod(C_2_array);
-    
+    C_1 = sum(mag_A.* D_list);
+    C_2 = sum(mag_B.* D_list);
+ 
     end
 
     %/////////////////////////////////////////
     
-    function interference(D_list, C_1_sample, C_2_sample)
+    function interference(D_list, C_1, C_2)
     %Requires: valid D_list, C_1, C_2 (correlation values) 
     %Modifies: nothing
     %Effects: calculates k constant, x (ambient), a (interference)
     %         x and a are both arrays. 
     
+    k = C_1/C_2;
+    a = D_list./(k-1);
+    x = mag_A - a;
+    
+    %Reads in the times from a text file
+    time_file = fopen('time_stamps_sample.txt');
+    timeline = fgetl(time_file);
+    n=1;
+    while(ischar(timeline))
+        times{n} = timeline;
+        timeline = fgetl(time_file);
+        n=n+1;
+    end
+    fclose(time_file);
+    
+    times_char_array = char(times);
+    
+    fileID = fopen('Results.txt','w');
+    fprinf(fileID, ' %12s\r\n', 'times', '
+    for i= 1:numel(a)
+        fprintf(fileID, '%s\t%f5\t%f5', times_char_array(i,:), a(i),b(i));
+    end
     end
 end
 
