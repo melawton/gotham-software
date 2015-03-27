@@ -77,5 +77,55 @@ interference(D_list, C_1, C_2)
         fprintf(fileID, '\n');
     end
     end
+
+    %//////////////////////////////////////
+
+    function plotting(x_n, a_n, D_list, k)
+    %plots B1, B2, x_n, a_n in one window
+
+    %functions to plot
+    B1 = x_n - a_n;
+    B2 = x_n - k*a_n;
+    x_n = B1 - a_n;
+    a_n = D_list./(k-1);
+
+    % B1 plot
+    figure(1)
+    subplot(2,2,1)
+    plot(n, B1)
+    hold on;
+    title('B1(n)')
+    ylabel('Mag Field Strength')
+    xlabel('n')
+    hold off;
+
+
+    %B2 plot
+    subplot(2,2,2)
+    plot(n, B2)
+    hold on;
+    title('B2(n)')
+    ylabel('Mag Field Strength')
+    xlabel('n')
+    hold off;
+
+    %x_n plot
+    subplot(2,2,3)
+    plot(n, x_n)
+    hold on;
+    title('x(n)')
+    ylabel('Mag Field Strength')
+    xlabel('n')
+    hold off;
+
+    %a_n plot
+    subplot(2,2,4)
+    plot(n, a_n)
+    hold on;
+    title('a(n)')
+    ylabel('Mag Field Strength')
+    xlabel('n')
+    hold off;
+end
 end
 
