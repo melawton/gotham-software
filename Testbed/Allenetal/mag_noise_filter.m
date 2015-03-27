@@ -1,12 +1,17 @@
 function [] = mag_noise_filter()
 %Here is the code for the electromagnetic noise filtering algorithm
 
-openfiles; %this calls the openfiles function
-D_list_calc(mag_A, mag_B); %calculates D_list
-correlation_calc(mag_A, mag_B, D_list)
+time = [1:6];
 
+%Calls functions in correct order of operation
+openfiles; 
+D_list_calc(mag_A, mag_B); 
+correlation_calc(mag_A, mag_B, D_list);
+interference(D_list, C_1, C_2);
+plotting(x, a, D_list, k, time);
 
-interference(D_list, C_1, C_2)
+%print k value to command window
+k
 
     %/////////////////////////////////////////
     
@@ -27,7 +32,7 @@ interference(D_list, C_1, C_2)
     %Modifies: D_list
     %Effects: subtracts mag_A from mag_B, stores results in D_list
 
-    D_list = mag_B - mag_A;
+        D_list = mag_B - mag_A;
 
     end
 
@@ -38,8 +43,9 @@ interference(D_list, C_1, C_2)
     %Modifies: C_1, C_2
     %Effects: C_1 is the correlation between D_list and mag_A
     %         C_2 is the correlation between D_list and mag_B
-    C_1 = sum(mag_A.* D_list);
-    C_2 = sum(mag_B.* D_list);
+    
+        C_1 = sum(mag_A.* D_list);
+        C_2 = sum(mag_B.* D_list);
  
     end
 
@@ -51,81 +57,91 @@ interference(D_list, C_1, C_2)
     %Effects: calculates k constant, x (ambient), a (interference)
     %         x and a are both arrays. 
     
-    k = C_1/C_2;
-    a = D_list./(k-1);
-    x = mag_A - a;
+   
+        k = C_1/C_2;
+        a = D_list./(k-1);
+        x = mag_A - a;
     
-    %Reads in the times from a text file
-    time_file = fopen('time_stamps_sample.txt');
-    timeline = fgetl(time_file);
-    n=1;
-    while(ischar(timeline))
-        times_cell{n} = timeline;
+        %Reads in the times from a text file
+        
+        time_file = fopen('time_stamps_sample.txt');
         timeline = fgetl(time_file);
-        n=n+1;
-    end
-    fclose(time_file);
-    
-    times_char_array = char(times_cell);
-    
-    fileID = fopen('Results.txt','wt');
-    fprintf(fileID, '%s \t %s \t %s \n', 'times', 'a', 'x');
-    fprintf(fileID, '\n');
- 
-    for i= 1:numel(a)
-        fprintf(fileID, '%s \t \t %f5 \t \t %f5 \n', times_char_array(i,:), a(i), x(i));
+        n=1;
+        
+        while(ischar(timeline))
+            times_cell{n} = timeline;
+            timeline = fgetl(time_file);
+            n=n+1;
+        end
+        
+        fclose(time_file);
+
+        times_char_array = char(times_cell);
+
+        fileID = fopen('Results.txt','wt');
+        fprintf(fileID, '%s \t %s \t %s \n', 'times', 'a', 'x');
         fprintf(fileID, '\n');
-    end
+
+        for i= 1:numel(a)
+            fprintf(fileID, '%s \t \t %f5 \t \t %f5 \n', times_char_array(i,:), a(i), x(i));
+            fprintf(fileID, '\n');
+        end
+        
     end
 
     %//////////////////////////////////////
 
-    function plotting(x_n, a_n, D_list, k)
-    %plots B1, B2, x_n, a_n in one window
+    function plotting(x_n, a_n, D_list, k, time)
+    %Requires: valid x_n, a_n, D_list, k arrays. time must be a matrix of 
+    %          integers the same size as x_n and a_n
+    %Modifies: nothing
+    %Effects: Generates graphs for B1, B2, a, x. 
 
-    %functions to plot
-    B1 = x_n - a_n;
-    B2 = x_n - k*a_n;
-    x_n = B1 - a_n;
-    a_n = D_list./(k-1);
+        %functions to plot
+        B1 = x_n - a_n;
+        B2 = x_n - k*a_n;
+        x_n = B1 - a_n;
+        a_n = D_list./(k-1);
 
-    % B1 plot
-    figure(1)
-    subplot(2,2,1)
-    plot(n, B1)
-    hold on;
-    title('B1(n)')
-    ylabel('Mag Field Strength')
-    xlabel('n')
-    hold off;
+        % B1 plot
+            figure(1)
+            subplot(2,2,1)
+            plot(time, B1)
+            hold on;
+            title('B1(n)')
+            ylabel('Mag Field Strength')
+            xlabel('n')
+            hold off;
 
+        %B2 plot
+            subplot(2,2,2)
+            plot(time, B2)
+            hold on;
+            title('B2(n)')
+            ylabel('Mag Field Strength')
+            xlabel('n')
+            hold off;
 
-    %B2 plot
-    subplot(2,2,2)
-    plot(n, B2)
-    hold on;
-    title('B2(n)')
-    ylabel('Mag Field Strength')
-    xlabel('n')
-    hold off;
+        %x_n plot
+            subplot(2,2,3)
+            plot(time, x_n)
+            hold on;
+            title('x(n)')
+            ylabel('Mag Field Strength')
+            xlabel('n')
+            hold off;
 
-    %x_n plot
-    subplot(2,2,3)
-    plot(n, x_n)
-    hold on;
-    title('x(n)')
-    ylabel('Mag Field Strength')
-    xlabel('n')
-    hold off;
+        %a_n plot
+            subplot(2,2,4)
+            plot(time, a_n)
+            hold on;
+            title('a(n)')
+            ylabel('Mag Field Strength')
+            xlabel('n')
+            hold off;
+    end
 
-    %a_n plot
-    subplot(2,2,4)
-    plot(n, a_n)
-    hold on;
-    title('a(n)')
-    ylabel('Mag Field Strength')
-    xlabel('n')
-    hold off;
-end
+    %//////////////////////////////////////
+    
 end
 
