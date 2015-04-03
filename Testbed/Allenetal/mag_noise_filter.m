@@ -15,13 +15,45 @@ k
 
     %/////////////////////////////////////////
     
-    function openfiles
+function openfiles
     %Requires: mag_A.txt and mag_B.txt to be properly formatted text files
     %Modifies: nothing
     %Effects: opens mag_A.txt and mag_B.txt for reading
-
-        mag_A = textread('mag_A.txt');
-        mag_B = textread('mag_B.txt');
+        fileID = fopen('mag_A_time.txt', 'r');
+        magA = textscan(fileID,'%s %s');
+        fclose(fileID);
+        times = magA{1};
+        measurements_A = magA{:,2}; 
+        
+        fileID = fopen('time_stamps.dat','wt');
+        [nrows,ncols] = size(times);        
+        for row = 1:nrows
+            fprintf(fileID,'%s \n',times{row,:});
+        end
+        fclose(fileID);
+             
+        fileID = fopen('mag_A.dat','wt');
+        [nrows,ncols] = size(measurements_A);
+        for row = 1:nrows
+            fprintf(fileID,'%s \n',measurements_A{row,:});
+        end
+        fclose(fileID);
+             
+        
+        fileID = fopen('mag_B_time.txt');
+        magB = textscan(fileID, '%s %s');
+        fclose(fileID);
+        measurements_B = magB{:,2};
+        
+        fileID = fopen('mag_B.dat','wt');
+        [nrows,ncols] = size(measurements_B);
+        for row = 1:nrows
+            fprintf(fileID,'%s \n',measurements_B{row,:});
+        end
+        fclose(fileID);
+        
+        mag_A = textread('mag_A.dat');
+        mag_B = textread('mag_B.dat');
 
     end
 
@@ -81,8 +113,9 @@ k
         fileID = fopen('Results.txt','wt');
         fprintf(fileID, '%s \t %s \t %s \n', 'times', 'a', 'x');
         fprintf(fileID, '\n');
-
-        for i= 1:numel(a)
+        
+        [nrow, ncol]= size(times_char_array);
+        for i= 1:nrow
             fprintf(fileID, '%s \t \t %f5 \t \t %f5 \n', times_char_array(i,:), a(i), x(i));
             fprintf(fileID, '\n');
         end
