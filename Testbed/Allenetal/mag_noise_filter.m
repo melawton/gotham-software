@@ -96,7 +96,7 @@ function openfiles
     
         %Reads in the times from a text file
         
-        time_file = fopen('time_stamps_sample.txt');
+        time_file = fopen('time_stamps.dat');
         timeline = fgetl(time_file);
         n=1;
         
