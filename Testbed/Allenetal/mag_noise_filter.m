@@ -54,6 +54,8 @@ function openfiles
         
         mag_A = textread('mag_A.dat');
         mag_B = textread('mag_B.dat');
+        mag_A = mag_A(:,1);
+        mag_B = mag_B(:,1);
 
     end
 
