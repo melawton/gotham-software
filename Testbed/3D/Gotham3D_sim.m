@@ -155,12 +155,30 @@ counter = 1; %counter for referencing elements from the global arrays
 n=length(xc_coord);%n number of coils
 numcurrcoils = 5;
 magfieldmatrix = zeros(100,100,100);
- 
+
+if length(xc_coord) < 1
+    ME = MException('Gotham3d_sim:notEnoughInputs','Please enter a coordinate');
+	throw(ME);
+    exit;
+end
+
+if length(yc_coord) < 1
+    ME = MException('Gotham3d_sim:notEnoughInputs','Please enter a coordinate');
+	throw(ME);
+    exit;
+end
+
+if length(zc_coord) < 1
+    ME = MException('Gotham3d_sim:notEnoughInputs','Please enter a coordinate');
+	throw(ME);
+    exit;
+end
+
 for coil = 1 : numcurrcoils
     
     mu0 = 4.*pi.*10^(-7);
     coilradius = 5; %radius of coil
-    
+
     xcord = xc_coord(counter); % x-coordinate
     ycord = yc_coord(counter); % y-coordinate
     zcord = zc_coord(counter);   % z-coordinate
