@@ -1,7 +1,7 @@
 function [] = mag_noise_filter()
 %Here is the code for the electromagnetic noise filtering algorithm
-
-time = [1:6];
+importdata(time_stamps);
+time = [1: numel(time_stamps)];
 
 %Calls functions in correct order of operation
 openfiles; 
