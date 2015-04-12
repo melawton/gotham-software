@@ -58,10 +58,12 @@ function reset_button_Callback(hObject, eventdata, handles)
 global xc_coord;
 global yc_coord;
 global zc_coord;
+global current;
 %Erases the list for the x and y coordinates
 xc_coord=[];
 yc_coord=[];
 zc_coord=[];
+
 
 % --- Executes on button press in enter_button.
 function enter_button_Callback(hObject, eventdata, handles)
@@ -90,7 +92,6 @@ zc_handle = findobj('Tag','zc_input');
 curr_handle = findobj('Tag','curr_input');
 num_coils_handle = findobj('Tag','numCoils');
 listbox3_handle = findobj('Tag','listbox3');
-
 xc = str2double(get(xc_handle,'String')); %x coordinate of coil
 yc = str2double(get(yc_handle,'String')); %y coordinate of coil
 zc = str2double(get(zc_handle,'String')); %z coordinate of coil
@@ -151,10 +152,11 @@ y(end)=[];
 z(end)=[];
 
 counter = 1; %counter for referencing elements from the global arrays
-
+Bfield = 0;
 n=length(xc_coord);%n number of coils
 numcurrcoils = 5;
-magfieldmatrix = zeros(100,100,100);
+magfieldmatrix = zeros(10,10,10);
+
 
 if length(xc_coord) < 1
     ME = MException('Gotham3d_sim:notEnoughInputs','Please enter a coordinate');
@@ -177,31 +179,34 @@ end
 for coil = 1 : numcurrcoils
     
     mu0 = 4.*pi.*10^(-7);
-    coilradius = 5; %radius of coil
-
-    xcord = xc_coord(counter); % x-coordinate
-    ycord = yc_coord(counter); % y-coordinate
-    zcord = zc_coord(counter);   % z-coordinate
+    coilradius = .5; %radius of coil
+ 
     
-    I = current; %current supply
+    I = current(n); %current supply
     heightcoil = 2; % height of coil
     numcoils = 5; % number of coils per coil
     heightpercoil = heightcoil/numcoils; %height of each coil
     heightinc = heightpercoil/360; %height increase for each theta
+    theta = 0;
+   
+    
 
-    for x = 1:100
-        x1 = (x - xcord)./1000; %from point to center in x direction
-        for y = 1:100
-            y1 = (y - ycord)./1000;
-            for z = 1:100
-                z1 = (z - zcord)./1000;
-                for theta = 0:360*numcoils
+    for x = 1:10
+        x1 = (x - xc_coord(n)); %from point to center in x direction
+        for y = 1:10
+            y1 = (y - yc_coord(n));
+            for z = 1:10
+               z1 = (z - zc_coord(n));
+                 for theta = 0:30:360
                     if theta == 0
-                        vector = [(x1- coilradius) y1 z1]; %vector
+                        vector = [x1 y1 z1]; %vector
+                        vectordx = [1 1 0];
+                        normvectordx = vectordx./norm(vectordx);
                         normvector = vector./norm(vector); 
-                        R = sqrt(x1.^2 + y1.^2 + z1.^2)- coilradius;
-                        
-                        magfieldmatrix(x,y,z) = +B;
+                        R = sqrt((x1).^2 + y1.^2 + z1.^2)- coilradius;
+                        dlxdr = (cross(normvectordx,normvector));
+                        Bfield = norm(mu0.*(I.*dlxdr)./R.^3); 
+                        magfieldmatrix(x,y,z) =  + Bfield;
                     elseif (theta > 0) && (90 >= theta)
                         deltay = coilradius.*sind(theta);
                         deltax = coilradius.*cosd(theta);
@@ -210,97 +215,70 @@ for coil = 1 : numcurrcoils
                         x2 = x1 + deltax;
                         z2 = z1 + deltaz;
                         R = sqrt(x2.^2 + y2.^2 + z2.^2);
-                        vectodx = [deltax deltay deltaz];
+                        vectordx = [deltax deltay deltaz];
                         normvectordx = vectordx./norm(vectordx);
                         vector = [x2 y2 z2];
                         normvector = vector./norm(vector);
-                         magfieldmatrix(x,y,z) = + B; 
+                        dlxdr = (cross(normvectordx,normvector));
+                        Bfield = norm((mu0.*(I*dlxdr))./R.^3);
+                        magfieldmatrix(x,y,z) =  + Bfield;
                     elseif (theta > 90) && (180 >= theta)
                         deltay = coilradius.*(1-cosd(theta));
-                        deltax = cooilradius.*(1+sind(theta));
+                        deltax = coilradius.*(1+sind(theta));
+                        deltaz = heightinc.*theta;
+                        y2 = y2 + deltay;
+                        z2 = z1 + deltaz;
+                        R = sqrt(x2.^2 + y2.^2 + z2.^2);
+                        vectordx = [deltax deltay deltaz];
+                        normvectordx = vectordx./norm(vectordx);
+                        vector = [x2 y2 z2];
+                        normvector = vector./norm(vector);
+                        dlxdr = cross(normvectordx,normvector);
+                        Bfield = norm(mu0.*(I*dlxdr)./R.^3); 
+                        magfieldmatrix(x,y,z) =  + Bfield;
+                    elseif (theta > 180) && (270 >= theta)
+                        deltay = coilradius.*(-cosd(theta));
+                        deltax = coilradius.*(2-sind(theta));
                         deltaz = heightinc.*theta;
                         x2 = x1 + deltax;
                         y2 = y2 + deltay;
                         z2 = z1 + deltaz;
                         R = sqrt(x2.^2 + y2.^2 + z2.^2);
                         vectordx = [deltax deltay deltaz];
-                        vector = [x2 y2 z2];
-                        normvector = vector./norm(vector);
-                    elseif (theta > 180) && (270 >= theta)
-                        deltay = coilradius.*(-cosd(theta));
-                        deltax = cooilradius.*(2-sind(theta));
-                        deltaz = heightinc.*theta;
-                        x2 = x1 + deltax;
-                        y2 = y2 + deltay;
-                        z2 = z1 + deltaz;
-                        R = sqrt(x2.^2 + y2.^2 + z2.^2);
-                        vectodx = [deltax deltay deltaz];
                         normvectordx = vectordx./norm(vectordx);
                         vector = [x2 y2 z2];
                         normvector = vector./norm(vector);
+                        dlxdr = cross(normvectordx,normvector);
+                        Bfield = norm(mu0.*(I*dlxdr)./R.^3);  
+                        magfieldmatrix(x,y,z) =  + Bfield;
                     else
                         deltay = coilradius.*(1-cosd(theta));
-                        deltax = cooilradius.*(1+sind(theta));
+                        deltax = coilradius.*(1+sind(theta));
                         deltaz = heightinc.*theta;
                         x2 = x1 + deltax;
                         y2 = y2 + deltay;
                         z2 = z1 + deltaz;
                         R = sqrt(x2.^2 + y2.^2 + z2.^2);
                         vector = [x2 y2 z2];
-                        vectodx = [deltax deltay deltaz];
+                        vectordx = [deltax deltay deltaz];
                         normvectordx = vectordx./norm(vectordx);
                         normvector = vector./norm(vector);
-                   
+                        dlxdr = cross(normvectordx,normvector);
+                        Bfield = norm(mu0.*(I*dlxdr)./R.^3); 
+                        magfieldmatrix(x,y,z) =  + Bfield;
                     end
                 end
             end
         end
     end
-    
-    counter = counter + 1;
 end
 
-%{
-%Constants
-mu = 4.*pi.*10^(-7); %vacuum permiability
-mur = 1.25663753.*10.^(-6);
 
-I = 100; %current in amps     
-r = 0.5; %radius in cm
-nc = 10; %number of coils in a loop
-m = I.*pi.*r.^2; 
+hold all;
 
-plane = zeros(100); %set up a 100 by 100 matrix
-test = [1 2;3 4]; %ignore this line
+plane = magfieldmatrix(:,:,5);
+hm = HeatMap(plane,'DisplayRange',100);
 
-% Calculate data
-
-for k = 1:n
-    
-    x_cur = xc_coord(k);
-    y_cur = yc_coord(k);
-    
-    for i = 1:100 %plots B field values on a grid
-         dy = 0;
-         dx = 0;
-            dy = (i-y_cur)./1000;
-            for j = 1:100
-                dx = (j-x_cur)./1000;
-                R = sqrt(dx.^2 + dy.^2);
-                if R ~= 0
-                   B = (mur.*mu.*m.*n)./(4.*pi.*R.^3);
-                   plane(j,i) = plane(j,i) + B; %Magfield at that point
-                else      
-                   B = mur.*mu.*n./(2.*r);
-                   plane(j,i) = plane(j,i) + B;
-                end
-            end 
-     end
-end
-%}
-
-%result = plane(x,y); %find the B-field at the designated point
-%Outputs
 
 result_handle = findobj('Tag','result');
 debug_handle = findobj('Tag','debug');
@@ -400,6 +378,7 @@ function y_input_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+%% 
 
 
 
