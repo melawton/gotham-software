@@ -1,24 +1,26 @@
 function [] = mag_noise_filter()
-%Here is the code for the electromagnetic noise filtering algorithm
-importdata(time_stamps);
-time = [1: numel(time_stamps)];
+%Requires: mag_A_time.txt and mag_B_time.txt to be properly formatted text files
+%Modifies: nothing
+%Effects: functions in correct order of operation, calculates 
 
-%Calls functions in correct order of operation
 openfiles; 
 D_list_calc(mag_A, mag_B); 
 correlation_calc(mag_A, mag_B, D_list);
 interference(D_list, C_1, C_2);
+
 plotting(x, a, D_list, k, time);
 
 %print k value to command window
 k
 
+
     %/////////////////////////////////////////
     
-function openfiles
-    %Requires: mag_A.txt and mag_B.txt to be properly formatted text files
+    function openfiles
+    %Requires: mag_A_time.txt and mag_B_time.txt to be properly formatted text files
     %Modifies: nothing
     %Effects: opens mag_A.txt and mag_B.txt for reading
+    
         fileID = fopen('mag_A_time.txt', 'r');
         magA = textscan(fileID,'%s %s');
         fclose(fileID);
@@ -39,7 +41,6 @@ function openfiles
         end
         fclose(fileID);
              
-        
         fileID = fopen('mag_B_time.txt');
         magB = textscan(fileID, '%s %s');
         fclose(fileID);
@@ -56,6 +57,17 @@ function openfiles
         mag_B = textread('mag_B.dat');
         mag_A = mag_A(:,1);
         mag_B = mag_B(:,1);
+        
+        %counts of number of data points we have   
+        fid = fopen('mag_A_time.txt','r');
+        fseek(fid, 0, 'eof');
+        chunksize = ftell(fid);
+        fseek(fid, 0, 'bof');
+        ch = fread(fid, chunksize, '*uchar');
+        nol = sum(ch == sprintf('\n')); % number of lines 
+        fclose(fid)
+
+        time = [1:nol]; %sets up "time" matrix for x axis in graphing
 
     end
 
@@ -133,15 +145,15 @@ function openfiles
     %Effects: Generates graphs for B1, B2, a, x. 
 
         %functions to plot
-        B1 = x_n - a_n;
-        B2 = x_n - k*a_n;
-        x_n = B1 - a_n;
-        a_n = D_list./(k-1);
+    
+        B1 = x_n + a_n;
+        B2 = x_n + k*a_n;
 
         % B1 plot
             figure(1)
             subplot(2,2,1)
             plot(time, B1)
+            ylim([-0.001 0.001]) %adjusts y axis range
             hold on;
             title('B1(n)')
             ylabel('Mag Field Strength')
@@ -151,6 +163,7 @@ function openfiles
         %B2 plot
             subplot(2,2,2)
             plot(time, B2)
+            ylim([-0.001 0.001]) %adjusts y axis range
             hold on;
             title('B2(n)')
             ylabel('Mag Field Strength')
@@ -160,6 +173,7 @@ function openfiles
         %x_n plot
             subplot(2,2,3)
             plot(time, x_n)
+            ylim([-0.001 0.001]) %adjusts y axis range
             hold on;
             title('x(n)')
             ylabel('Mag Field Strength')
@@ -169,6 +183,7 @@ function openfiles
         %a_n plot
             subplot(2,2,4)
             plot(time, a_n)
+            ylim([-0.001 0.001]) %adjusts y axis range
             hold on;
             title('a(n)')
             ylabel('Mag Field Strength')
