@@ -154,7 +154,7 @@ z(end)=[];
 counter = 1; %counter for referencing elements from the global arrays
 Bfield = 0;
 n=length(xc_coord);%n number of coils
-numcurrcoils = 5;
+numcurrcoils = n;
 magfieldmatrix = zeros(10,10,10);
 
 
@@ -192,24 +192,25 @@ for coil = 1 : numcurrcoils
     
 
     for x = 1:10
-        x1 = (x - xc_coord(n)); %from point to center in x direction
+        x1 = (x - xc_coord(n));
+         %from point to center in x direction
         for y = 1:10
             y1 = (y - yc_coord(n));
             for z = 1:10
                z1 = (z - zc_coord(n));
-                 for theta = 0:30:360
-                    if theta == 0
-                        vector = [x1 y1 z1]; %vector
-                        vectordx = [1 1 0];
-                        normvectordx = vectordx./norm(vectordx);
-                        normvector = vector./norm(vector); 
-                        R = sqrt((x1).^2 + y1.^2 + z1.^2)- coilradius;
-                        dlxdr = (cross(normvectordx,normvector));
-                        Bfield = norm(mu0.*(I.*dlxdr)./R.^3); 
-                        magfieldmatrix(x,y,z) =  + Bfield;
-                    elseif (theta > 0) && (90 >= theta)
-                        deltay = coilradius.*sind(theta);
-                        deltax = coilradius.*cosd(theta);
+                 for theta = 0:10:360
+                    %if theta == 0
+                        %vector = [x1 y1 z1]; %vector
+                        %vectordx = [1 1 0];
+                        %normvectordx = vectordx./norm(vectordx);
+                        %normvector = vector./norm(vector); 
+                        %R = sqrt((x1-coilradius).^2 + y1.^2 + z1.^2);
+                        %dlxdr = (cross(normvectordx,normvector));
+                        %Bfield = norm(mu0.*(I.*dlxdr)./R.^3); 
+                        %magfieldmatrix(z,y,x) =  + Bfield;
+                    if (theta > 0) && (90 >= theta)
+                        deltax = coilradius.*sind(theta);
+                        deltay = coilradius - coilradius.*cosd(theta);
                         deltaz = heightinc.*theta;
                         y2 = y1 + deltay;
                         x2 = x1 + deltax;
@@ -223,8 +224,8 @@ for coil = 1 : numcurrcoils
                         Bfield = norm((mu0.*(I*dlxdr))./R.^3);
                         magfieldmatrix(x,y,z) =  + Bfield;
                     elseif (theta > 90) && (180 >= theta)
-                        deltay = coilradius.*(1-cosd(theta));
-                        deltax = coilradius.*(1+sind(theta));
+                        deltax = coilradius.*(1-cosd(theta));
+                        deltay = coilradius.*(1+sind(theta));
                         deltaz = heightinc.*theta;
                         y2 = y2 + deltay;
                         z2 = z1 + deltaz;
@@ -237,11 +238,11 @@ for coil = 1 : numcurrcoils
                         Bfield = norm(mu0.*(I*dlxdr)./R.^3); 
                         magfieldmatrix(x,y,z) =  + Bfield;
                     elseif (theta > 180) && (270 >= theta)
-                        deltay = coilradius.*(-cosd(theta));
-                        deltax = coilradius.*(2-sind(theta));
+                        deltay = coilradius.*(2-cosd(theta));
+                        deltax = coilradius.*(-sind(theta));
                         deltaz = heightinc.*theta;
                         x2 = x1 + deltax;
-                        y2 = y2 + deltay;
+                        y2 = y1 + deltay;
                         z2 = z1 + deltaz;
                         R = sqrt(x2.^2 + y2.^2 + z2.^2);
                         vectordx = [deltax deltay deltaz];
@@ -252,11 +253,11 @@ for coil = 1 : numcurrcoils
                         Bfield = norm(mu0.*(I*dlxdr)./R.^3);  
                         magfieldmatrix(x,y,z) =  + Bfield;
                     else
-                        deltay = coilradius.*(1-cosd(theta));
-                        deltax = coilradius.*(1+sind(theta));
+                        deltax = coilradius.*(1-cosd(theta));
+                        deltay = coilradius.*(-sind(theta));
                         deltaz = heightinc.*theta;
                         x2 = x1 + deltax;
-                        y2 = y2 + deltay;
+                        y2 = y1 + deltay;
                         z2 = z1 + deltaz;
                         R = sqrt(x2.^2 + y2.^2 + z2.^2);
                         vector = [x2 y2 z2];
@@ -275,9 +276,10 @@ end
 
 
 hold all;
-
-plane = magfieldmatrix(:,:,5);
+for n=1:9
+plane = magfieldmatrix(:,:,n);
 hm = HeatMap(plane,'DisplayRange',100);
+end
 
 
 result_handle = findobj('Tag','result');
