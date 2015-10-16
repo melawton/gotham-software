@@ -6,8 +6,8 @@ using namespace std;
 #ifndef MAG_NOISE_FILTER
 #define MAG_NOISE_FILTER
 
-const int HOUR_TO_SECONDS = 360; //used to convert hours to seconds
-const int MINUTES_TO_SECONDS = 60 //used to convert minu
+const int HOURS_TO_SECONDS = 360; //used to convert hours to seconds
+const int MINUTES_TO_SECONDS = 60; //used to convert minu
 //mag_a mag_b hold the count
 //d list is  just the difference
 //c1 and c2 are just numbers 
@@ -17,7 +17,7 @@ const int MINUTES_TO_SECONDS = 60 //used to convert minu
 //Modifies: magA, timeA, magB, timeB
 //Effects: reads data from both files and stores the magnetic field measurement into the corresponding mag vect
 //         and stores the time stamp (converted to seconds i.e. 01:00:00 ->360) into the correct time array
-void openFiles(vector<double> &magA, vector<double> &timeA , vector<double> &magB, vector<double> &timeB
+void openFiles(vector<double> &magA, vector<double> &timeA , vector<double> &magB, vector<double> &timeB,
 			   string aFile, string bFile);
 //Requires: all vectors have been filled correctly
 //Modifies: D_list, timeD
@@ -32,6 +32,14 @@ void D_list_calc(const vector<double> &magA, const vector<double> &timeA,
 //Effect: returns the correlation coeffition for what ever mag list is passed
 double calculateC(const vector<double> &mag, const vector<double> &time, 
 				  const vector<double> D_list, const vector<double> timeD);
-void interference(const vector<double> &magA, const vector<double> &magB);
+//Requires: all vectors are properly initialized
+//modifies: ntohing
+//Effects: performs noise filtering on the two readings and outputs a file in the format of the matlab version
+void interference(vector<double> magA, const vector<double> &timeA,
+  const vector<double> &magB, const vector<double> &timeB, string outFile);
+//Requires: aFile and bFile are the file names of valid magnetometer reading files
+//modifies: nothing
+//Effects: performs noise filering on the two files and outputs a filtered file.
+void generateReducedFile(string aFile, string bFile, string outFile);
 
 #endif
