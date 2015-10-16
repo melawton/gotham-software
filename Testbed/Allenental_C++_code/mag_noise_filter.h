@@ -8,7 +8,7 @@ using namespace std;
 
 const int HOUR_TO_SECONDS = 360; //used to convert hours to seconds
 const int MINUTES_TO_SECONDS = 60 //used to convert minu
-//magA and B in files hold both time and field info
+//mag_a mag_b hold the count
 //d list is  just the difference
 //c1 and c2 are just numbers 
 //times are stored as seconds
@@ -19,8 +19,19 @@ const int MINUTES_TO_SECONDS = 60 //used to convert minu
 //         and stores the time stamp (converted to seconds i.e. 01:00:00 ->360) into the correct time array
 void openFiles(vector<double> &magA, vector<double> &timeA , vector<double> &magB, vector<double> &timeB
 			   string aFile, string bFile);
-void correlation_calc(const vector<double> &magA, const vector<double> &magB);
-void D_list_calc(const vector<double> &magA, const vector<double> &magB);
+//Requires: all vectors have been filled correctly
+//Modifies: D_list, timeD
+//Effects: Fills in D_list and timeD
+//NOTE: This version is a little more abstracted than the other version in matlab
+//this allows for the case whwere magA and magBs times arent synced
+void D_list_calc(const vector<double> &magA, const vector<double> &timeA,
+ 				 const vector<double> &magB, const vector<double> &timeB,
+ 				 vector<double> &D_list, vector<double> &timeD);
+//Requires: all vectors have been filled correctly and the correct time list is passed with each mag vector
+//Modifies: nothing
+//Effect: returns the correlation coeffition for what ever mag list is passed
+double calculateC(const vector<double> &mag, const vector<double> &time, 
+				  const vector<double> D_list, const vector<double> timeD);
 void interference(const vector<double> &magA, const vector<double> &magB);
 
 #endif
